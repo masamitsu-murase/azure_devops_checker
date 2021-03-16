@@ -1,81 +1,124 @@
 <template>
-  <div>
-    <nav>
-      <div class="nav-wrapper">
-        <span href="#" class="brand-logo">Presence</span>
-        <ul id="nav-mobile" class="right">
-          <li>
-            <a href="#" id="refresh_link">
-              <i class="material-icons" v-on:click.prevent="refreshStatus">refresh</i>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+  <v-app>
+    <v-card>
+      <v-list two-line>
+        <!-- my pull requests -->
+        <v-subheader
+          v-show="hasMyPullRequests()"
+          v-text="'My Pull Requests'"
+        ></v-subheader>
 
-    <div class="row" v-if="healthy">
-      <ul class="col s12 collection">
-        <li
-          class="collection-item avatar"
-          v-for="user in users"
-          v-bind:title="user.title"
-          v-bind:key="user.id"
-        >
-          <i class="material-icons circle" v-bind:class="user.presence_color">{{ user.icon }}</i>
-          <span class="title">{{ user.displayName }}</span>
-          <p>{{ user.mail }}</p>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="row">
-      <div class="col s12">
-        <p>Error occurred.</p>
-        <p>{{ error_reason }}</p>
-        <div>
-          <a
-            class="waves-effect waves-light btn"
-            id="open_options"
-            v-on:click.prevent="openOptions"
-          >
-            Options
-            <i class="material-icons right">settings</i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+        <template v-for="(item, index) in my_pull_requests">
+          <v-divider :key="index"></v-divider>
+          <v-list-item :key="item.id">
+            <v-list-item-avatar>
+              <v-img :src="users[item.user_id].image"></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-subtitle>{{
+                item.description
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+
+        <!-- review -->
+        <v-subheader
+          v-show="hasReviewItems()"
+          v-text="'My Review Items'"
+        ></v-subheader>
+
+        <template v-for="(item, index) in review_items">
+          <v-divider :key="index"></v-divider>
+          <v-list-item :key="item.id">
+            <v-list-item-avatar>
+              <v-img :src="users[item.user_id].image"></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-subtitle>{{
+                item.description
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-list>
+    </v-card>
+  </v-app>
 </template>
 
 <script>
 export default {
-  data: function() {
+  data: function () {
     return {
-      healthy: true,
-      error_reason: "",
-      users: []
+      my_pull_requests: [
+        {
+          id: "hoge",
+          title: "Hoge",
+          description: "This is a pen. This is an apple.",
+          user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9",
+        },
+      ],
+      review_items: [
+        {
+          id: "hoge2",
+          title: "Hoge2",
+          description: "This is a pen. This is an apple.",
+          user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9",
+        },
+      ],
+      users: {
+        "6dfca89d-806c-4387-a03b-009e458cfaf9": {
+          displayName: "Masamitsu MURASE",
+          image:
+            "https://dev.azure.com/masamitsu-murase/_api/_common/identityImage?id=6dfca89d-806c-4387-a03b-009e458cfaf9",
+        },
+      },
     };
   },
   methods: {
-    refreshStatus: function() {
-      // window.TeamsPresenceChecker.refreshStatus(this);
-      this.healthy = false;
-      this.error_reason = "Unknown Error";
-      this.users.push({
-        "title": "hogehoge",
-        "id": 0,
-        "presence_color": "red",
-        "displayName": "Mura",
-        "mail": "murase@hoge"
-      })
+    hasMyPullRequests: function () {
+      return this.my_pull_requests.length > 0;
     },
 
-    openOptions: function() {
+    hasReviewItems: function () {
+      return this.review_items.length > 0;
+    },
+
+    refreshStatus: function () {
+      (async function(){
+        // window.TeamsPresenceChecker.refreshStatus(this);
+        const organization = "masamitsu-murase";
+        const project= "test";
+        const pr_url = `https://dev.azure.com/${organization}/${project}/_apis/git/pullrequests?api-version=6.0`;
+        const pull_requests = await (await fetch(pr_url, {credentials: "include"})).json();
+        const promises = pull_requests.value.map(pr => {
+          const repositoryId = pr.repository.id;
+          const pullRequestId = pr.pullRequestId;
+          const url = `https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repositoryId}/pullRequests/${pullRequestId}/threads?api-version=6.0`;
+          return fetch(url, {credentials: "include"});
+        });
+
+        const response = await Promise.all(promises);
+        const results = (await Promise.all(response.map(req => req.json()))).map(x => x.value).flat();
+        console.log(results);
+      })();
+    },
+
+    markAsRead: function (elem) {
+      console.log(elem);
+    },
+
+    openOptions: function () {
       // window.TeamsPresenceChecker.openOptions();
-    }
+    },
   },
-  created: function() {
+  created: function () {
     this.refreshStatus();
-  }
+  },
 };
 </script>
 

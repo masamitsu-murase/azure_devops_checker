@@ -30,6 +30,11 @@
         "default_title": "Azure DevOps PR Checker",
         "default_popup": "html/popup.html"
     },
+    "options_ui": {
+        "page": "html/popup.html",
+        "open_in_tab": true,
+        "chrome_style": false
+    },
     "permissions": [
         "https://dev.azure.com/*"
     ],
