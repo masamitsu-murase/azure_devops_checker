@@ -48,8 +48,8 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-group v-else :key="`ri-${item.pull_request.id}`">
-            <v-list-item>
+          <v-list-group v-else :key="`ri-${item.pull_request.id}`" :value="true">
+            <template v-slot:activator>
               <v-list-item-avatar>
                 <v-img :src="item.pull_request.createdBy.imageUrl"></v-img>
               </v-list-item-avatar>
@@ -60,9 +60,8 @@
                   item.pull_request.description
                 }}</v-list-item-subtitle>
               </v-list-item-content>
-            </v-list-item>
+            </template>
 
-            <v-list-group>
               <v-list-item
                 v-for="thread in item.threads"
                 :key="`pr-${item.pull_request.id}-th-${thread.id}`"
@@ -80,7 +79,6 @@
                   }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-            </v-list-group>
           </v-list-group>
         </template>
       </v-list>
