@@ -11,11 +11,11 @@
         <template v-for="item in my_pull_requests">
           <v-list-item :key="`pr-${item.id}`">
             <v-list-item-avatar>
-              <v-img :src="item.createdBy.imageUrl"></v-img>
+              <v-img :src="item.createdBy._links.avatar.href"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title v-on:click.stop="openPullRequest(item)">{{ item.title }}</v-list-item-title>
               <v-list-item-subtitle>{{
                 item.description
               }}</v-list-item-subtitle>
@@ -35,11 +35,11 @@
             :key="`ri-${item.pull_request.id}`"
           >
             <v-list-item-avatar>
-              <v-img :src="item.pull_request.createdBy.imageUrl"></v-img>
+              <v-img :src="item.pull_request.createdBy._links.avatar.href"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title>{{
+              <v-list-item-title v-on:click.stop="openPullRequest(item.pull_request)">{{
                 item.pull_request.title
               }}</v-list-item-title>
               <v-list-item-subtitle>{{
@@ -48,37 +48,44 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-group v-else :key="`ri-${item.pull_request.id}`" :value="true">
+          <v-list-group
+            v-else
+            :key="`ri-${item.pull_request.id}`"
+            no-action
+            :value="true"
+          >
             <template v-slot:activator>
               <v-list-item-avatar>
-                <v-img :src="item.pull_request.createdBy.imageUrl"></v-img>
+                <v-img :src="item.pull_request.createdBy._links.avatar.href"></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title>Title</v-list-item-title>
+                <v-list-item-title v-on:click.stop="openPullRequest(item.pull_request)">{{
+                  item.pull_request.title
+                }}</v-list-item-title>
                 <v-list-item-subtitle>{{
                   item.pull_request.description
                 }}</v-list-item-subtitle>
               </v-list-item-content>
             </template>
 
-              <v-list-item
-                v-for="thread in item.threads"
-                :key="`pr-${item.pull_request.id}-th-${thread.id}`"
-              >
-                <v-list-item-avatar>
-                  <v-img :src="thread.comments[0].author.imageUrl"></v-img>
-                </v-list-item-avatar>
+            <v-list-item
+              v-for="thread in item.threads"
+              :key="`pr-${item.pull_request.id}-th-${thread.id}`"
+            >
+              <v-list-item-avatar>
+                <v-img :src="thread.comments[0].author._links.avatar.href"></v-img>
+              </v-list-item-avatar>
 
-                <v-list-item-content>
-                  <v-list-item-title>{{
-                    thread.comments[0].content
-                  }}</v-list-item-title>
-                  <v-list-item-subtitle>{{
-                    thread.comments[thread.comments.length - 1].content
-                  }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>{{
+                  thread.comments[0].content
+                }}</v-list-item-title>
+                <v-list-item-subtitle>{{
+                  thread.comments[thread.comments.length - 1].content
+                }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
           </v-list-group>
         </template>
       </v-list>
@@ -95,6 +102,12 @@ export default {
     };
   },
   methods: {
+    openPullRequest: function(pull_request) {
+      console.log(pull_request);
+      const url = `${pull_request.repository.webUrl}/${pull_request.pullRequestId}`;
+      window.open(url, "_blank");
+    },
+
     hasMyPullRequests: function () {
       return this.my_pull_requests.length > 0;
     },

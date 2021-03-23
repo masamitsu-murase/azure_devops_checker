@@ -102,7 +102,7 @@ class AzureDevOps {
         const a_date_str = a.pull_request.creationDate;
         const b_date_str = b.pull_request.creationDate;
         if (a_date_str !== b_date_str) {
-            if (Date.parse(a_date).getTime() < Date.parse(b_date).getTime()) {
+            if (Date.parse(a_date_str) < Date.parse(b_date_str)) {
                 return -1;
             } else {
                 return 1;
@@ -149,7 +149,7 @@ class AzureDevOps {
         }
 
         for (let reviewer of reviewers) {
-            if (reviewer.id == this.user_id && AzureDevOps.CLOSED_VOTE_STATUS.includes(reviewer.vote)) {
+            if (reviewer.id == this.user_id && !AzureDevOps.CLOSED_VOTE_STATUS.includes(reviewer.vote)) {
                 return true;
             }
         }
