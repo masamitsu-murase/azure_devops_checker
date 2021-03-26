@@ -83,7 +83,7 @@
             >
               <v-list-item-avatar>
                 <v-img
-                  :src="thread.comments[0].author._links.avatar.href"
+                  :src="thread.comments[thread.comments.length - 1].author._links.avatar.href"
                 ></v-img>
               </v-list-item-avatar>
 
