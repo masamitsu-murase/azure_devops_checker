@@ -15,7 +15,9 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title v-on:click.stop="openPullRequest(item)">{{ item.title }}</v-list-item-title>
+              <v-list-item-title v-on:click.stop="openPullRequest(item)">{{
+                item.title
+              }}</v-list-item-title>
               <v-list-item-subtitle>{{
                 item.description
               }}</v-list-item-subtitle>
@@ -35,13 +37,16 @@
             :key="`ri-${item.pull_request.id}`"
           >
             <v-list-item-avatar>
-              <v-img :src="item.pull_request.createdBy._links.avatar.href"></v-img>
+              <v-img
+                :src="item.pull_request.createdBy._links.avatar.href"
+              ></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title v-on:click.stop="openPullRequest(item.pull_request)">{{
-                item.pull_request.title
-              }}</v-list-item-title>
+              <v-list-item-title
+                v-on:click.stop="openPullRequest(item.pull_request)"
+                >{{ item.pull_request.title }}</v-list-item-title
+              >
               <v-list-item-subtitle>{{
                 item.pull_request.description
               }}</v-list-item-subtitle>
@@ -56,13 +61,16 @@
           >
             <template v-slot:activator>
               <v-list-item-avatar>
-                <v-img :src="item.pull_request.createdBy._links.avatar.href"></v-img>
+                <v-img
+                  :src="item.pull_request.createdBy._links.avatar.href"
+                ></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title v-on:click.stop="openPullRequest(item.pull_request)">{{
-                  item.pull_request.title
-                }}</v-list-item-title>
+                <v-list-item-title
+                  v-on:click.stop="openPullRequest(item.pull_request)"
+                  >{{ item.pull_request.title }}</v-list-item-title
+                >
                 <v-list-item-subtitle>{{
                   item.pull_request.description
                 }}</v-list-item-subtitle>
@@ -74,7 +82,9 @@
               :key="`pr-${item.pull_request.id}-th-${thread.id}`"
             >
               <v-list-item-avatar>
-                <v-img :src="thread.comments[0].author._links.avatar.href"></v-img>
+                <v-img
+                  :src="thread.comments[0].author._links.avatar.href"
+                ></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>
@@ -102,9 +112,8 @@ export default {
     };
   },
   methods: {
-    openPullRequest: function(pull_request) {
-      console.log(pull_request);
-      const url = `${pull_request.repository.webUrl}/${pull_request.pullRequestId}`;
+    openPullRequest: function (pull_request) {
+      const url = `${pull_request.repository.webUrl}/pullrequest/${pull_request.pullRequestId}`;
       window.open(url, "_blank");
     },
 
@@ -134,11 +143,8 @@ export default {
     },
   },
   created: function () {
-    this.azure_devops = new AzureDevOps(
-      "masamitsu-murase",
-      "test",
-      "6dfca89d-806c-4387-a03b-009e458cfaf9"
-    );
+    const { organization, project, user_id } = AzureDevOps.defaultUser();
+    this.azure_devops = new AzureDevOps(organization, project, user_id);
     this.refreshStatus();
   },
 };

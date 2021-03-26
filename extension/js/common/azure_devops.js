@@ -9,6 +9,14 @@ class AzureDevOps {
     }
     static CLOSED_VOTE_STATUS = [10, 5, -10]
 
+    static defaultUser() {
+        return {
+            organization: "masamitsu-murase",
+            project: "test",
+            user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9"
+        };
+    }
+
     constructor(organization, project, user_id) {
         this.organization = organization;
         this.project = project;
@@ -88,7 +96,10 @@ class AzureDevOps {
     async activePullRequests() {
         const path = "/_apis/git/pullrequests";
         const params = { "searchCriteria.status": "active" };
-        return (await this.getJson(path, params)).value;
+        const pull_requests = (await this.getJson(path, params)).value;
+        console.log("old", pull_requests);
+        const promises = pull_requests.map(pr => this.getJson(pr.url, {}, ""));
+        return await Promise.all(promises);
     }
 
     async threadsForPullRequest(pr) {
@@ -131,6 +142,7 @@ class AzureDevOps {
 
     async activePullRequestsWithActiveThreads() {
         const pull_requests = await this.activePullRequests();
+        console.log(pull_requests);
         const promises = pull_requests.map(pr => this.threadsForPullRequest(pr));
         const threads_list = await Promise.all(promises);
         const active_threads_list = threads_list.map(threads => threads.filter(th => th.status === "active"));
