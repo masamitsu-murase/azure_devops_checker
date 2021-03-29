@@ -6,8 +6,8 @@ class AzureDevOps {
         "0": "NO_VOTE",
         "-5": "WAITING_FOR_AUTHOR",
         "-10": "REJECTED",
-    }
-    static CLOSED_VOTE_STATUS = [10, 5, -10]
+    };
+    static CLOSED_VOTE_STATUS = [10, 5, -10];
 
     static async currentUserInfo() {
         const user_info = await browser.storage.local.get("user_info");
