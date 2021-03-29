@@ -11,7 +11,6 @@ class AzureDevOps {
 
     static async currentUserInfo() {
         const user_info = await browser.storage.local.get("user_info");
-        console.log(user_info);
         return user_info.user_info;
         // return {
         //     organization: "masamitsu-murase",
@@ -43,7 +42,6 @@ class AzureDevOps {
         }
 
         const url = base_url + path + "?" + search_params.toString();
-        console.log("getjson", url);
         const response = await fetch(url, { credentials: "include" });
         if (!response.ok) {
             throw new Error(`getJson error: ${response.status}`);
@@ -100,7 +98,6 @@ class AzureDevOps {
         const path = "/_apis/git/pullrequests";
         const params = { "searchCriteria.status": "active" };
         const pull_requests = (await this.getJson(path, params)).value;
-        console.log("old", pull_requests);
         const promises = pull_requests.map(pr => this.getJson(pr.url, {}, ""));
         return await Promise.all(promises);
     }
@@ -145,7 +142,6 @@ class AzureDevOps {
 
     async activePullRequestsWithActiveThreads() {
         const pull_requests = await this.activePullRequests();
-        console.log(pull_requests);
         const promises = pull_requests.map(pr => this.threadsForPullRequest(pr));
         const threads_list = await Promise.all(promises);
         const active_threads_list = threads_list.map(threads => threads.filter(th => th.status === "active"));
