@@ -6,9 +6,9 @@
 
     const onload = function () {
         console.log("onload");
-        browser.runtime.sendMessage({"type": "load"}).then(result => {
-            console.log(result);
-        });
+        // browser.runtime.sendMessage({"type": "load"}).then(result => {
+        //     console.log(result);
+        // });
     };
 
     window.addEventListener("load", onload);

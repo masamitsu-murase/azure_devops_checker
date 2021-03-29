@@ -1,92 +1,168 @@
 <template>
-  <div>
-    <nav>
-      <div class="nav-wrapper">
-        <span href="#" class="brand-logo">Presence</span>
-        <ul id="nav-mobile" class="right">
-          <li>
-            <a href="#" id="refresh_link">
-              <i class="material-icons" v-on:click.prevent="refreshStatus">refresh</i>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+  <v-app>
+    <v-card width="500" height="500" mx-auto>
+      <v-card-title class="headline indigo accent-4">
+        <span class="headline">Azure DevOps Checker</span>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="refreshStatus">
+          <v-icon>fa-sync</v-icon>
+        </v-btn>
+      </v-card-title>
 
-    <div class="row" v-if="healthy">
-      <ul class="col s12 collection">
-        <li
-          class="collection-item avatar"
-          v-for="user in users"
-          v-bind:title="user.title"
-          v-bind:key="user.id"
-        >
-          <i class="material-icons circle" v-bind:class="user.presence_color">{{ user.icon }}</i>
-          <span class="title">{{ user.displayName }}</span>
-          <p>{{ user.mail }}</p>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="row">
-      <div class="col s12">
-        <p>Error occurred.</p>
-        <p>{{ error_reason }}</p>
-        <div>
-          <a
-            class="waves-effect waves-light btn"
-            id="open_options"
-            v-on:click.prevent="openOptions"
+      <v-list two-line>
+        <!-- my pull requests -->
+        <v-subheader
+          v-show="hasMyPullRequests()"
+          v-text="'My Pull Requests'"
+        ></v-subheader>
+
+        <template v-for="item in my_pull_requests">
+          <v-list-item :key="`pr-${item.id}`">
+            <v-list-item-avatar>
+              <v-img :src="item.createdBy._links.avatar.href"></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title v-on:click.stop="openPullRequest(item)">{{
+                item.title
+              }}</v-list-item-title>
+              <v-list-item-subtitle>{{
+                item.description
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+
+        <!-- review -->
+        <v-subheader
+          v-show="hasReviewItems()"
+          v-text="'My Review Items'"
+        ></v-subheader>
+
+        <template v-for="item in my_review_items">
+          <v-list-item
+            v-if="item.threads.length == 0"
+            :key="`ri-${item.pull_request.id}`"
           >
-            Options
-            <i class="material-icons right">settings</i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+            <v-list-item-avatar>
+              <v-img
+                :src="item.pull_request.createdBy._links.avatar.href"
+              ></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title
+                v-on:click.stop="openPullRequest(item.pull_request)"
+                >{{ item.pull_request.title }}</v-list-item-title
+              >
+              <v-list-item-subtitle>{{
+                item.pull_request.description
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-group
+            v-else
+            :key="`ri-${item.pull_request.id}`"
+            no-action
+            :value="true"
+          >
+            <template v-slot:activator>
+              <v-list-item-avatar>
+                <v-img
+                  :src="item.pull_request.createdBy._links.avatar.href"
+                ></v-img>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title
+                  v-on:click.stop="openPullRequest(item.pull_request)"
+                  >{{ item.pull_request.title }}</v-list-item-title
+                >
+                <v-list-item-subtitle>{{
+                  item.pull_request.description
+                }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+
+            <v-list-item
+              v-for="thread in item.threads"
+              :key="`pr-${item.pull_request.id}-th-${thread.id}`"
+            >
+              <v-list-item-avatar>
+                <v-img
+                  :src="
+                    thread.comments[thread.comments.length - 1].author._links
+                      .avatar.href
+                  "
+                ></v-img>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title>{{
+                  thread.comments[0].content
+                }}</v-list-item-title>
+                <v-list-item-subtitle>{{
+                  thread.comments[thread.comments.length - 1].content
+                }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </template>
+      </v-list>
+    </v-card>
+  </v-app>
 </template>
 
 <script>
 export default {
-  data: function() {
+  data: function () {
     return {
-      healthy: true,
-      error_reason: "",
-      users: []
+      my_pull_requests: [],
+      my_review_items: [],
     };
   },
   methods: {
-    refreshStatus: function() {
-      // window.TeamsPresenceChecker.refreshStatus(this);
-      this.healthy = false;
-      this.error_reason = "Unknown Error";
-      this.users.push({
-        "title": "hogehoge",
-        "id": 0,
-        "presence_color": "red",
-        "displayName": "Mura",
-        "mail": "murase@hoge"
-      })
+    openPullRequest: function (pull_request) {
+      const url = `${pull_request.repository.webUrl}/pullrequest/${pull_request.pullRequestId}`;
+      window.open(url, "_blank");
     },
 
-    openOptions: function() {
+    hasMyPullRequests: function () {
+      return this.my_pull_requests.length > 0;
+    },
+
+    hasReviewItems: function () {
+      return this.my_review_items.length > 0;
+    },
+
+    refreshStatus: function () {
+      const vm = this;
+      (async function () {
+        const my_works = await vm.azure_devops.findMyWorks();
+        vm.my_pull_requests = my_works.my_pull_requests;
+        vm.my_review_items = my_works.my_review_items;
+      })();
+    },
+
+    openOptions: function () {
       // window.TeamsPresenceChecker.openOptions();
-    }
+    },
   },
-  created: function() {
-    this.refreshStatus();
-  }
+  created: function () {
+    const vm = this;
+    (async function () {
+      const {
+        organization,
+        project,
+        user_id,
+      } = await AzureDevOps.currentUserInfo();
+      vm.azure_devops = new AzureDevOps(organization, project, user_id);
+      vm.refreshStatus();
+    })();
+  },
 };
 </script>
 
 <style scoped>
-nav {
-  min-width: 350px;
-  padding-left: 2em;
-  padding-right: 2em;
-}
-
-.collection .collection-item.avatar {
-  min-height: max-content;
-}
 </style>
