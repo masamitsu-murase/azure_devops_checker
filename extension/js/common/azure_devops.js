@@ -9,12 +9,15 @@ class AzureDevOps {
     }
     static CLOSED_VOTE_STATUS = [10, 5, -10]
 
-    static defaultUser() {
-        return {
-            organization: "masamitsu-murase",
-            project: "test",
-            user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9"
-        };
+    static async currentUserInfo() {
+        const user_info = await browser.storage.local.get("user_info");
+        console.log(user_info);
+        return user_info.user_info;
+        // return {
+        //     organization: "masamitsu-murase",
+        //     project: "test",
+        //     user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9"
+        // };
     }
 
     constructor(organization, project, user_id) {

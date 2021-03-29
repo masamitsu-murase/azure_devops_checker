@@ -1,6 +1,14 @@
 <template>
   <v-app>
-    <v-card width="500">
+    <v-card width="500" height="500" mx-auto>
+      <v-card-title class="headline indigo accent-4">
+        <span class="headline">Azure DevOps Checker</span>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="refreshStatus">
+          <v-icon>fa-sync</v-icon>
+        </v-btn>
+      </v-card-title>
+
       <v-list two-line>
         <!-- my pull requests -->
         <v-subheader
@@ -83,7 +91,10 @@
             >
               <v-list-item-avatar>
                 <v-img
-                  :src="thread.comments[thread.comments.length - 1].author._links.avatar.href"
+                  :src="
+                    thread.comments[thread.comments.length - 1].author._links
+                      .avatar.href
+                  "
                 ></v-img>
               </v-list-item-avatar>
 
@@ -134,30 +145,24 @@ export default {
       })();
     },
 
-    markAsRead: function (elem) {
-      console.log(elem);
-    },
-
     openOptions: function () {
       // window.TeamsPresenceChecker.openOptions();
     },
   },
   created: function () {
-    const { organization, project, user_id } = AzureDevOps.defaultUser();
-    this.azure_devops = new AzureDevOps(organization, project, user_id);
-    this.refreshStatus();
+    const vm = this;
+    (async function () {
+      const {
+        organization,
+        project,
+        user_id,
+      } = await AzureDevOps.currentUserInfo();
+      vm.azure_devops = new AzureDevOps(organization, project, user_id);
+      vm.refreshStatus();
+    })();
   },
 };
 </script>
 
 <style scoped>
-nav {
-  min-width: 350px;
-  padding-left: 2em;
-  padding-right: 2em;
-}
-
-.collection .collection-item.avatar {
-  min-height: max-content;
-}
 </style>

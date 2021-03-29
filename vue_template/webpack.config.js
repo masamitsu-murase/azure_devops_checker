@@ -3,10 +3,13 @@ const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const path = require('path');
 
 module.exports = {
-    entry: "./src/index.js",
+    entry: {
+        popup: "./src/popup.js",
+        options: "./src/options.js"
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "popup_vue.js"
+        filename: "[name]_vue.js"
     },
     module: {
         rules: [
