@@ -1,14 +1,5 @@
 
 class AzureDevOps {
-    static VOTE_STATUS = {
-        "10": "APPROVED",
-        "5": "APPROVED_WITH_SUGGESTIONS",
-        "0": "NO_VOTE",
-        "-5": "WAITING_FOR_AUTHOR",
-        "-10": "REJECTED",
-    };
-    static CLOSED_VOTE_STATUS = [10, 5, -10];
-
     static async currentUserInfo() {
         const user_info = await browser.storage.local.get("user_info");
         return user_info.user_info;
@@ -205,3 +196,12 @@ class AzureDevOps {
         }
     }
 }
+
+AzureDevOps.VOTE_STATUS = {
+    "10": "APPROVED",
+    "5": "APPROVED_WITH_SUGGESTIONS",
+    "0": "NO_VOTE",
+    "-5": "WAITING_FOR_AUTHOR",
+    "-10": "REJECTED",
+};
+AzureDevOps.CLOSED_VOTE_STATUS = [10, 5, -10];

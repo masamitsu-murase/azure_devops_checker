@@ -11,7 +11,7 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "azure_devops_pr_checker@masamitsu.murase.jp",
-            "strict_min_version": "57.0"
+            "strict_min_version": "69.0"
         }
     },
     "default_locale": "ja",

@@ -1,5 +1,6 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const InnerHtmlRemoverPlugin = require('./webpack_plugins/inner_html_remover')
 const path = require('path');
 
 module.exports = {
@@ -45,6 +46,15 @@ module.exports = {
     },
     plugins: [
         new VueLoaderPlugin(),
-        new VuetifyLoaderPlugin()
-    ]
+        new VuetifyLoaderPlugin(),
+        new InnerHtmlRemoverPlugin()
+    ],
+    node: {
+        global: false,
+        __filename: false,
+        __dirname: false,
+    },
+    // optimization: {
+    //     minimize: false
+    // },
 }

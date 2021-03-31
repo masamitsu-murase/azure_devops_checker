@@ -9,6 +9,9 @@ Vue.use(Vuetify)
 const opts = {
     icons: {
         iconfont: "fa"
+    },
+    theme: {
+        disable: true
     }
 }
 
