@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-card width="500" height="500" mx-auto>
-      <v-card-title class="headline indigo accent-4">
+      <v-card-title class="headline indigo primary accent--text text--lighten-5">
         <span class="headline">Azure DevOps Checker</span>
         <v-spacer></v-spacer>
         <v-btn icon @click="refreshStatus">

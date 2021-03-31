@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-card mx-auto>
-      <v-card-title class="headline">
+      <v-card-title class="headline indigo primary accent--text text--lighten-5">
         <span>Azure DevOps Checker</span>
       </v-card-title>
 
