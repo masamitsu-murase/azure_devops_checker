@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-card mx-auto>
-      <v-card-title class="headline indigo accent-4">
+      <v-card-title class="headline">
         <span>Azure DevOps Checker</span>
       </v-card-title>
 
@@ -73,6 +73,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>
