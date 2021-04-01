@@ -1,0 +1,64 @@
+name: WebExtensions
+
+on:
+  push:
+    branches: [ master, github_actions ]
+    tags: ['v*']
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+    - name: Install npm modules
+      run: npm ci
+      shell: cmd
+      working-directory: ./vue_template
+    - name: Build popup_vue.js and options_vue.js
+      run: npm run build
+      shell: cmd
+      working-directory: ./vue_template
+    - name: Copy generated files.
+      run: |
+        copy /Y vue_template\dist\popup_vue.js extension\js\popup\popup_vue.js
+        copy /Y vue_template\dist\options_vue.js extension\js\options\options_vue.js
+      shell: cmd
+    - name: Create WebExtensions
+      run: |
+        where 7z.exe
+        7z.exe a ..\azure_devops_checker.zip *
+      shell: cmd
+      working-directory: ./extension
+    - uses: actions/upload-artifact@v2
+      with:
+        path: azure_devops_checker.zip
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Release note.
+        draft: true
+        prerelease: false
+      if: startsWith(github.ref, 'refs/tags/v')
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./azure_devops_checker.zip
+        asset_name: azure_devops_checker.zip
+        asset_content_type: application/zip
+      if: startsWith(github.ref, 'refs/tags/v')
