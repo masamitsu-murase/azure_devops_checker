@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <v-card width="500" height="500" mx-auto>
-      <v-card-title class="headline indigo primary accent--text text--lighten-5">
+      <v-card-title
+        class="headline indigo primary accent--text text--lighten-5"
+      >
         <span class="headline">Azure DevOps Checker</span>
         <v-spacer></v-spacer>
         <v-btn icon @click="refreshStatus">
@@ -110,6 +112,10 @@
           </v-list-group>
         </template>
       </v-list>
+
+      <v-overlay :value="uploading">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
     </v-card>
   </v-app>
 </template>
@@ -120,6 +126,7 @@ export default {
     return {
       my_pull_requests: [],
       my_review_items: [],
+      uploading: false,
     };
   },
   methods: {
@@ -132,6 +139,10 @@ export default {
       return this.my_pull_requests.length > 0;
     },
 
+    setUploading: function (enable) {
+      this.uploading = enable;
+    },
+
     hasReviewItems: function () {
       return this.my_review_items.length > 0;
     },
@@ -139,9 +150,14 @@ export default {
     refreshStatus: function () {
       const vm = this;
       (async function () {
-        const my_works = await vm.azure_devops.findMyWorks();
-        vm.my_pull_requests = my_works.my_pull_requests;
-        vm.my_review_items = my_works.my_review_items;
+        try {
+          vm.setUploading(true);
+          const my_works = await vm.azure_devops.findMyWorks();
+          vm.my_pull_requests = my_works.my_pull_requests;
+          vm.my_review_items = my_works.my_review_items;
+        } finally {
+          vm.setUploading(false);
+        }
       })();
     },
 
