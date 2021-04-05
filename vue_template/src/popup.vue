@@ -6,6 +6,9 @@
       >
         <span class="headline">Azure DevOps Checker</span>
         <v-spacer></v-spacer>
+        <v-btn icon @click="openOptions">
+          <v-icon>fa-cog</v-icon>
+        </v-btn>
         <v-btn icon @click="refreshStatus">
           <v-icon>fa-sync</v-icon>
         </v-btn>
@@ -190,7 +193,10 @@ export default {
     },
 
     openOptions: function () {
-      // window.TeamsPresenceChecker.openOptions();
+      (async function () {
+        await browser.runtime.openOptionsPage();
+        window.close();
+      })();
     },
   },
   created: function () {
