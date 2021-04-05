@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <v-card mx-auto>
-      <v-card-title class="headline indigo primary accent--text text--lighten-5">
+      <v-card-title
+        class="headline indigo primary accent--text text--lighten-5"
+      >
         <span>Azure DevOps Checker</span>
       </v-card-title>
 
@@ -32,6 +34,31 @@
           </v-row>
         </v-container>
       </v-form>
+
+      <v-dialog v-model="dialog" max-width="400">
+        <v-card>
+          <v-card-title class="headline warning">
+            Warning
+          </v-card-title>
+
+          <v-card-text>
+            Error occurred while accessing Azure DevOps.<br />
+            Please check the followings:
+            <ul>
+              <li>You have already logged in to Azure DevOps.</li>
+              <li>Your organization, project, and user id are correct.</li>
+            </ul>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="green darken-1" text @click="dialog = false">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-card>
   </v-app>
 </template>
@@ -43,6 +70,7 @@ export default {
       organization: "",
       project: "",
       user_id: "",
+      dialog: false,
     };
   },
   methods: {
@@ -54,7 +82,17 @@ export default {
           project: vm.project,
           user_id: vm.user_id,
         };
+        const azure_devops = new AzureDevOps(
+          vm.organization,
+          vm.project,
+          vm.user_id
+        );
         await browser.storage.local.set({ user_info: user_info });
+        try {
+          await azure_devops.findMyWorks();
+        } catch (e) {
+          vm.dialog = true;
+        }
       })();
     },
   },

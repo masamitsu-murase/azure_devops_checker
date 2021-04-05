@@ -116,6 +116,29 @@
       <v-overlay :value="uploading">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
+
+      <v-dialog v-model="dialog" max-width="400">
+        <v-card>
+          <v-card-title class="headline error">Error</v-card-title>
+
+          <v-card-text>
+            Error occurred while accessing Azure DevOps.<br />
+            Please check the followings:
+            <ul>
+              <li>You have already logged in to Azure DevOps.</li>
+              <li>Your organization, project, and user id are correct.</li>
+            </ul>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="green darken-1" text @click="dialog = false">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-card>
   </v-app>
 </template>
@@ -127,6 +150,7 @@ export default {
       my_pull_requests: [],
       my_review_items: [],
       uploading: false,
+      dialog: false,
     };
   },
   methods: {
@@ -155,6 +179,10 @@ export default {
           const my_works = await vm.azure_devops.findMyWorks();
           vm.my_pull_requests = my_works.my_pull_requests;
           vm.my_review_items = my_works.my_review_items;
+        } catch (e) {
+          vm.setUploading(false);
+          vm.dialog = true;
+          console.log(e);
         } finally {
           vm.setUploading(false);
         }
