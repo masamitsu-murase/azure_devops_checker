@@ -24,6 +24,7 @@
                 v-model="user_id"
                 label="User ID"
                 placeholder="01234567-89ab-cdef-0123-456789abcdef"
+                :rules="userIdRules()"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -37,9 +38,7 @@
 
       <v-dialog v-model="dialog" max-width="400">
         <v-card>
-          <v-card-title class="headline warning">
-            Warning
-          </v-card-title>
+          <v-card-title class="headline warning"> Warning </v-card-title>
 
           <v-card-text>
             Error occurred while accessing Azure DevOps.<br />
@@ -94,6 +93,10 @@ export default {
           vm.dialog = true;
         }
       })();
+    },
+    userIdRules: function () {
+      const uuid_pattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+      return [(v) => uuid_pattern.test(v) || "UUID in lower case is required."];
     },
   },
   created: function () {
