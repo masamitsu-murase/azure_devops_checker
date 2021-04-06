@@ -2,10 +2,10 @@ name: WebExtensions
 
 on:
   push:
-    branches: [ master, github_actions ]
+    branches: [ main, github_actions ]
     tags: ['v*']
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
