@@ -11,7 +11,8 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "azure_devops_pr_checker@masamitsu.murase.jp",
-            "strict_min_version": "69.0"
+            "strict_min_version": "69.0",
+            "update_url": "https://masamitsu-murase.github.io/azure_devops_checker/update_link.json"
         }
     },
     "default_locale": "ja",
