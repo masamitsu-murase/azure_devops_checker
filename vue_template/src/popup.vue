@@ -9,6 +9,7 @@
         <v-btn icon @click="openOptions">
           <v-icon>fa-cog</v-icon>
         </v-btn>
+        &nbsp;
         <v-btn icon @click="refreshStatus">
           <v-icon>fa-sync</v-icon>
         </v-btn>
