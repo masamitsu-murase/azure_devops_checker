@@ -1,0 +1,12 @@
+{
+  "addons": {
+    "azure_devops_pr_checker@masamitsu.murase.jp": {
+      "updates": [
+        {
+          "version": "0.1.1",
+          "update_link": "https://github.com/masamitsu-murase/azure_devops_checker/releases/download/v0.1.1/azure_devops_pr_checker-0.1.1-fx.xpi"
+        }
+      ]
+    }
+  }
+}
