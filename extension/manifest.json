@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Azure DevOps PR Checker",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Extension to check Pull Request in Azure DevOps.",
     "icons": {
         "32": "icons/icon32.png",
