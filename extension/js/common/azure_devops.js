@@ -216,7 +216,7 @@
 
         async findMyWorks() {
             const pull_requests_with_threads = await this.activePullRequestsWithActiveThreads();
-            const my_teams = await this.myTeams(true);
+            const my_teams = await this.myTeams();
 
             const my_pull_requests = [];
             const my_review_items = [];
