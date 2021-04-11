@@ -190,7 +190,8 @@
                 return false;
             }
 
-            const my_team_in_reviewer = reviewers.find(x => (x.id in my_teams));
+            const my_teams_ids = my_teams.map(x => x.id);
+            const my_team_in_reviewer = reviewers.find(x => my_teams_ids.includes(x.id));
             if (my_team_in_reviewer) {
                 if (!AzureDevOps.CLOSED_VOTE_STATUS.includes(my_team_in_reviewer.vote)) {
                     return true;
@@ -216,7 +217,7 @@
 
         async findMyWorks() {
             const pull_requests_with_threads = await this.activePullRequestsWithActiveThreads();
-            const my_teams = await this.myTeams(true);
+            const my_teams = await this.myTeams();
 
             const my_pull_requests = [];
             const my_review_items = [];
