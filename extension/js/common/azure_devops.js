@@ -5,7 +5,7 @@
     const API_VERSION = "6.0";
 
     async function getJson(url, params) {
-        params ||= {};
+        params = (params || {});
         const search_params = new URLSearchParams();
         search_params.append("api-version", API_VERSION);
         for (let key in params) {
