@@ -29,9 +29,12 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title v-on:click.stop="openPullRequest(item)">{{
-                item.title
-              }}</v-list-item-title>
+              <v-list-item-title
+                >{{ item.title }}
+                <v-icon dense @click.stop="openPullRequest(item)"
+                  >fa-external-link-alt</v-icon
+                ></v-list-item-title
+              >
               <v-list-item-subtitle>{{
                 item.description
               }}</v-list-item-subtitle>
@@ -58,8 +61,10 @@
 
             <v-list-item-content>
               <v-list-item-title
-                v-on:click.stop="openPullRequest(item.pull_request)"
-                >{{ item.pull_request.title }}</v-list-item-title
+                >{{ item.pull_request.title }}
+                <v-icon dense @click.stop="openPullRequest(item.pull_request)"
+                  >fa-external-link-alt</v-icon
+                ></v-list-item-title
               >
               <v-list-item-subtitle>{{
                 item.pull_request.description
@@ -71,6 +76,7 @@
             v-else
             :key="`ri-${item.pull_request.id}`"
             no-action
+            :group="`ri-${item.pull_request.id}`"
             :value="true"
           >
             <template v-slot:activator>
@@ -82,8 +88,10 @@
 
               <v-list-item-content>
                 <v-list-item-title
-                  v-on:click.stop="openPullRequest(item.pull_request)"
-                  >{{ item.pull_request.title }}</v-list-item-title
+                  >{{ item.pull_request.title }}
+                  <v-icon dense @click.stop="openPullRequest(item.pull_request)"
+                    >fa-external-link-alt</v-icon
+                  ></v-list-item-title
                 >
                 <v-list-item-subtitle>{{
                   item.pull_request.description
