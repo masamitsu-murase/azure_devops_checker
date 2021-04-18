@@ -1,3 +1,5 @@
+[![WebExtensions](https://github.com/masamitsu-murase/azure_devops_checker/actions/workflows/webextensions.yml/badge.svg)](https://github.com/masamitsu-murase/azure_devops_checker/actions/workflows/webextensions.yml)
+
 # Azure DevOps Checker
 
 ## Overview
@@ -10,6 +12,13 @@ This is an extension to check Pull Request status in your Azure DevOps project.
 2. Input your organization, project, and user id in option page.
    Your user id is found in `https://dev.azure.com/{organization}/_apis/projects/{project-uuid}/teams/{team-id}/members`
 3. Open popup to see the current status.
+
+## Releases
+
+* For Firefox  
+  Download and install `azure_devops_pr_checker-X.Y.Z-fx.xpi` from [Releases page](https://github.com/masamitsu-murase/azure_devops_checker/releases).
+* For Google Chrome  
+  Install this extension in [Chrome WebStore page](https://chrome.google.com/webstore/detail/azure-devops-pr-checker/mbogghodjfbndghplebepmfgjapejiio).
 
 ## 3rd party libraries
 
