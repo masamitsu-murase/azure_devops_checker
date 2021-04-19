@@ -82,13 +82,21 @@
 
     class AzureDevOps {
         static async currentUserInfo() {
-            const user_info = await browser.storage.local.get("user_info");
-            return user_info.user_info;
-            // return {
-            //     organization: "masamitsu-murase",
-            //     project: "test",
-            //     user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9"
-            // };
+            try {
+                const user_info = await browser.storage.local.get("user_info");
+                return user_info.user_info;
+                // return {
+                //     organization: "masamitsu-murase",
+                //     project: "test",
+                //     user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9"
+                // };
+            } catch (e) {
+                return {
+                    organization: "",
+                    project: "",
+                    user_id: ""
+                };
+            }
         }
 
         constructor(organization, project, user_id) {
