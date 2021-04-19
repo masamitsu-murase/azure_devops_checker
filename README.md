@@ -29,9 +29,9 @@ This is an extension to check Pull Request status in your Azure DevOps project.
 * [Font Awesome Free](https://fontawesome.com/)  
   This is distributed under the following license.  
   For more detail, please refer to [the license page](https://fontawesome.com/license/free).
-  * Icons — CC BY 4.0 License
-  * Fonts — SIL OFL 1.1 License
-  * Code — MIT License
+  * Icons - CC BY 4.0 License
+  * Fonts - SIL OFL 1.1 License
+  * Code - MIT License
 * [WebExtension-Polyfill](https://github.com/mozilla/webextension-polyfill)  
   This is distributed under the MPL-2.0 License
 
