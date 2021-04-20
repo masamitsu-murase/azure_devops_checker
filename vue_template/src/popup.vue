@@ -29,12 +29,12 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title
-                >{{ item.title }}
-                <v-icon dense @click.stop="openPullRequest(item)"
-                  >fa-external-link-alt</v-icon
-                ></v-list-item-title
-              >
+              <v-list-item-title>
+                <v-icon dense @click.stop="openPullRequest(item)">
+                  fa-external-link-alt
+                </v-icon>
+                {{ item.title }}
+              </v-list-item-title>
               <v-list-item-subtitle>{{
                 item.description
               }}</v-list-item-subtitle>
@@ -60,12 +60,12 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title
-                >{{ item.pull_request.title }}
-                <v-icon dense @click.stop="openPullRequest(item.pull_request)"
-                  >fa-external-link-alt</v-icon
-                ></v-list-item-title
-              >
+              <v-list-item-title>
+                <v-icon dense @click.stop="openPullRequest(item.pull_request)">
+                  fa-external-link-alt
+                </v-icon>
+                {{ item.pull_request.title }}
+              </v-list-item-title>
               <v-list-item-subtitle>{{
                 item.pull_request.description
               }}</v-list-item-subtitle>
@@ -87,12 +87,15 @@
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title
-                  >{{ item.pull_request.title }}
-                  <v-icon dense @click.stop="openPullRequest(item.pull_request)"
-                    >fa-external-link-alt</v-icon
-                  ></v-list-item-title
-                >
+                <v-list-item-title>
+                  <v-icon
+                    dense
+                    @click.stop="openPullRequest(item.pull_request)"
+                  >
+                    fa-external-link-alt
+                  </v-icon>
+                  {{ item.pull_request.title }}
+                </v-list-item-title>
                 <v-list-item-subtitle>{{
                   item.pull_request.description
                 }}</v-list-item-subtitle>
