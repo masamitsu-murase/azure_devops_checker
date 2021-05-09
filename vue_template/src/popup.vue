@@ -107,7 +107,7 @@
         </template>
       </v-list>
 
-      <v-overlay :value="uploading">
+      <v-overlay :value="updating">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
 
@@ -143,7 +143,7 @@ export default {
     return {
       my_pull_requests: [],
       my_review_items: [],
-      uploading: false,
+      updating: false,
       dialog: false,
     };
   },
@@ -172,8 +172,8 @@ export default {
       return this.my_pull_requests.length > 0;
     },
 
-    setUploading: function (enable) {
-      this.uploading = enable;
+    setUpdating: function (enable) {
+      this.updating = enable;
     },
 
     hasReviewItems: function () {
@@ -184,16 +184,16 @@ export default {
       const vm = this;
       (async function () {
         try {
-          vm.setUploading(true);
+          vm.setUpdating(true);
           const my_works = await vm.azure_devops.findMyWorks();
           vm.my_pull_requests = my_works.my_pull_requests;
           vm.my_review_items = my_works.my_review_items;
         } catch (e) {
-          vm.setUploading(false);
+          vm.setUpdating(false);
           vm.dialog = true;
           console.log(e);
         } finally {
-          vm.setUploading(false);
+          vm.setUpdating(false);
         }
       })();
     },
