@@ -236,7 +236,10 @@
                 const pr = pr_with_threads.pull_request;
                 const threads = pr_with_threads.threads;
                 if (this.isPullRequestCreatedByMe(pr)) {
-                    my_pull_requests.push(pr);
+                    my_pull_requests.push({
+                        pull_request: pr,
+                        threads: threads
+                    });
                 }
                 if (this.isPullRequestReviewedByMe(pr, my_teams) || threads.some(th => this.isThreadCreatedByMe(th))) {
                     my_review_items.push({
