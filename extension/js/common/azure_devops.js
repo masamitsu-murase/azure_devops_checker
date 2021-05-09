@@ -84,6 +84,9 @@
         static async currentUserInfo() {
             try {
                 const user_info = await browser.storage.local.get("user_info");
+                if (!user_info || !user_info.user_info) {
+                    throw "usef_info not found in local storage."
+                }
                 return user_info.user_info;
                 // return {
                 //     organization: "masamitsu-murase",
