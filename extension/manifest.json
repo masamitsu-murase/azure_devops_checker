@@ -21,7 +21,8 @@
             "js/common/browser-polyfill.min.js",
             "/js/common/azure_devops.js",
             "js/background/main.js"
-        ]
+        ],
+        "persistent": false
     },
     "browser_action": {
         "browser_style": true,
@@ -40,6 +41,7 @@
     },
     "permissions": [
         "storage",
+        "alarms",
         "https://dev.azure.com/*"
     ],
     "web_accessible_resources": []
