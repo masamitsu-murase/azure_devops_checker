@@ -19,6 +19,7 @@
     "background": {
         "scripts": [
             "js/common/browser-polyfill.min.js",
+            "/js/common/azure_devops.js",
             "js/background/main.js"
         ]
     },
