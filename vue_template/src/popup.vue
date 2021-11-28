@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-card width="500" height="500" mx-auto>
+    <v-card width="500" height="800">
       <v-card-title
         class="headline indigo primary accent--text text--lighten-5"
       >
@@ -34,7 +34,7 @@
                 ></v-img>
               </v-list-item-avatar>
 
-              <v-list-item-content>
+              <v-list-item-content class="py-2">
                 <v-list-item-title>
                   <v-icon
                     dense
@@ -83,8 +83,9 @@
               <v-list-item
                 v-for="thread in item.threads"
                 :key="`pr-${item.pull_request.id}-th-${thread.id}`"
+                class="v-list-item-threads"
               >
-                <v-list-item-avatar>
+                <v-list-item-avatar class="my-0">
                   <v-img
                     :src="
                       thread.comments[thread.comments.length - 1].author._links
@@ -93,7 +94,7 @@
                   ></v-img>
                 </v-list-item-avatar>
 
-                <v-list-item-content>
+                <v-list-item-content class="py-1">
                   <v-list-item-title>{{
                     thread.comments[0].content
                   }}</v-list-item-title>
@@ -219,3 +220,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-list-item-threads {
+  min-height: 40px !important;
+}
+</style>
