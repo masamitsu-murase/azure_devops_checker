@@ -1,8 +1,4 @@
 (function () {
-
-    const refresh = async function(){
-    };
-
     const onload = function () {
     };
 

@@ -181,12 +181,16 @@ export default {
       return this.my_review_items.length > 0;
     },
 
+    findMyWorks: async function () {
+      return await browser.runtime.sendMessage({type: "findMyWorks"});
+    },
+
     refreshStatus: function () {
       const vm = this;
       (async function () {
         try {
           vm.setUpdating(true);
-          const my_works = await vm.azure_devops.findMyWorks();
+          const my_works = await vm.findMyWorks();
           vm.my_pull_requests = my_works.my_pull_requests;
           vm.my_review_items = my_works.my_review_items;
         } catch (e) {
@@ -208,15 +212,7 @@ export default {
   },
   created: function () {
     const vm = this;
-    (async function () {
-      const {
-        organization,
-        project,
-        user_id,
-      } = await AzureDevOps.currentUserInfo();
-      vm.azure_devops = new AzureDevOps(organization, project, user_id);
-      vm.refreshStatus();
-    })();
+    vm.refreshStatus();
   },
 };
 </script>
