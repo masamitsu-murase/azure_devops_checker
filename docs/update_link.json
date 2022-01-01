@@ -25,6 +25,10 @@
         {
           "version": "0.6.0",
           "update_link": "https://github.com/masamitsu-murase/azure_devops_checker/releases/download/v0.6.0/azure_devops_pr_checker-0.6.0-fx.xpi"
+        },
+        {
+          "version": "0.7.0",
+          "update_link": "https://github.com/masamitsu-murase/azure_devops_checker/releases/download/v0.7.0/azure_devops_pr_checker-0.7.0-fx.xpi"
         }
       ]
     }
