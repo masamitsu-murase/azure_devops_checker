@@ -75,7 +75,7 @@
         browser.runtime.onMessage.addListener((message, sender) => {
             switch (message.type) {
                 case "findMyWorks":
-                    return find_my_works_in_single_request();
+                    return find_my_works_in_single_request().then(works => Array.from(works.entries()));
                 default:
                     console.error(`Unknown type ${message.type}`);
                     break;

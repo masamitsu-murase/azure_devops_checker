@@ -17,7 +17,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12">
-              <v-text-field v-model="project" label="Project"></v-text-field>
+              <v-text-field v-model="project" label="Project" placeholder="Project1, Project2, Project3"></v-text-field>
             </v-col>
             <v-col cols="12">
               <v-text-field
