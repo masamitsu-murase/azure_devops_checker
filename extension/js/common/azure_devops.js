@@ -87,16 +87,21 @@
                 if (!user_info || !user_info.user_info) {
                     throw "usef_info not found in local storage."
                 }
-                return user_info.user_info;
+                const projects = user_info.user_info.project.split(",").map(x => x.trim());
+                return {
+                    organization: user_info.user_info.organization,
+                    projects: projects,
+                    user_id: user_info.user_info.user_id
+                };
                 // return {
                 //     organization: "masamitsu-murase",
-                //     project: "test",
+                //     projects: ["test", "test2"],
                 //     user_id: "6dfca89d-806c-4387-a03b-009e458cfaf9"
                 // };
             } catch (e) {
                 return {
                     organization: "",
-                    project: "",
+                    projects: [],
                     user_id: ""
                 };
             }

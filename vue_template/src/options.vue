@@ -81,14 +81,11 @@ export default {
           project: vm.project,
           user_id: vm.user_id,
         };
-        const azure_devops = new AzureDevOps(
-          vm.organization,
-          vm.project,
-          vm.user_id
-        );
         await browser.storage.local.set({ user_info: user_info });
         try {
-          await azure_devops.findMyWorks();
+          const projects = vm.project.split(",").map(x => x.trim());
+          const azure_devops_list = projects.map(p => new AzureDevOps(vm.organization, p, vm.user_id));
+          await Promise.all(azure_devops_list.map(ad => ad.findMyWorks()));
         } catch (e) {
           vm.dialog = true;
         }
@@ -104,11 +101,11 @@ export default {
     (async function () {
       const {
         organization,
-        project,
+        projects,
         user_id,
       } = await AzureDevOps.currentUserInfo();
       vm.organization = organization;
-      vm.project = project;
+      vm.project = projects.join(", ");
       vm.user_id = user_id;
     })();
   },

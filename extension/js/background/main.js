@@ -26,11 +26,12 @@
     var find_my_works = async function () {
         const {
             organization,
-            project,
+            projects,
             user_id,
         } = await AzureDevOps.currentUserInfo();
-        let azure_devops = new AzureDevOps(organization, project, user_id);
-        return await azure_devops.findMyWorks();
+        const azure_devops_list = projects.map(project => new AzureDevOps(organization, project, user_id));
+        const my_works_list = await Promise.all(azure_devops_list.map(ad => ad.findMyWorks()));
+        return new Map(projects.map((project, i) => [project, my_works_list[i]]));
     };
 
     var find_my_works_in_single_request = async function () {
@@ -51,8 +52,10 @@
         (async function () {
             try {
                 const my_works = await find_my_works_in_single_request();
-                const { my_pull_requests, my_review_items } = my_works;
-                set_badge_text(my_pull_requests.length, my_review_items.length);
+                const [pull_request_count, review_count] = Array.from(my_works.values())
+                    .map(item => [item.my_pull_requests.length, item.my_review_items.length])
+                    .reduce((prev, curr) => prev.map((v, i) => v + curr[i]), [0, 0]);
+                set_badge_text(pull_request_count, review_count);
             } catch (e) {
                 set_badge_error();
             }

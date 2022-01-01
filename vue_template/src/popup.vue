@@ -142,6 +142,7 @@
 export default {
   data: function () {
     return {
+      project: "",
       my_pull_requests: [],
       my_review_items: [],
       updating: false,
@@ -182,7 +183,8 @@ export default {
     },
 
     findMyWorks: async function () {
-      return await browser.runtime.sendMessage({type: "findMyWorks"});
+      let all_works = await browser.runtime.sendMessage({ type: "findMyWorks" });
+      return all_works;
     },
 
     refreshStatus: function () {
@@ -191,8 +193,12 @@ export default {
         try {
           vm.setUpdating(true);
           const my_works = await vm.findMyWorks();
-          vm.my_pull_requests = my_works.my_pull_requests;
-          vm.my_review_items = my_works.my_review_items;
+          if (!my_works.has(vm.project)) {
+            vm.project = Array.from(my_works.keys())[0];
+          }
+          const my_work = my_works.get(vm.project);
+          vm.my_pull_requests = my_work.my_pull_requests;
+          vm.my_review_items = my_work.my_review_items;
         } catch (e) {
           vm.setUpdating(false);
           vm.dialog = true;
