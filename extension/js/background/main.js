@@ -48,14 +48,18 @@
         }
     };
 
+    var update_badge_text = function (my_works) {
+        const [pull_request_count, review_count] = Array.from(my_works.values())
+            .map(item => [item.my_pull_requests.length, item.my_review_items.length])
+            .reduce((prev, curr) => prev.map((v, i) => v + curr[i]), [0, 0]);
+        set_badge_text(pull_request_count, review_count);
+    };
+
     var refresh_data = function () {
         (async function () {
             try {
                 const my_works = await find_my_works_in_single_request();
-                const [pull_request_count, review_count] = Array.from(my_works.values())
-                    .map(item => [item.my_pull_requests.length, item.my_review_items.length])
-                    .reduce((prev, curr) => prev.map((v, i) => v + curr[i]), [0, 0]);
-                set_badge_text(pull_request_count, review_count);
+                update_badge_text(my_works);
             } catch (e) {
                 set_badge_error();
             }
@@ -75,7 +79,10 @@
         browser.runtime.onMessage.addListener((message, sender) => {
             switch (message.type) {
                 case "findMyWorks":
-                    return find_my_works_in_single_request().then(works => Array.from(works.entries()));
+                    return find_my_works_in_single_request().then(works => {
+                        update_badge_text(works);
+                        return Array.from(works.entries());
+                    });
                 default:
                     console.error(`Unknown type ${message.type}`);
                     break;
