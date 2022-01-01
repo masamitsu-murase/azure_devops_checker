@@ -15,6 +15,19 @@
         </v-btn>
       </v-card-title>
 
+      <v-slide-group show-arrows center-active v-if="projects.length > 1">
+        <v-slide-item v-for="proj in projects" :key="`project-${proj}`">
+          <v-btn
+              class="mx-2"
+              :class="{primary: proj == project }"
+              depressed
+              @click.stop="selectProject(proj)"
+            >
+              {{ projectSlideContent(proj) }}
+            </v-btn>
+        </v-slide-item>
+      </v-slide-group>
+
       <v-list two-line>
         <template v-for="list_item in listItems()">
           <v-subheader
@@ -142,11 +155,32 @@
 export default {
   data: function () {
     return {
-      my_pull_requests: [],
-      my_review_items: [],
+      project: "",
+      my_works: new Map(),
       updating: false,
       dialog: false,
     };
+  },
+  computed: {
+    projects: function () {
+      return Array.from(this.my_works.keys());
+    },
+    my_pull_requests: function () {
+      if (this.my_works.has(this.project)) {
+        const my_work = this.my_works.get(this.project);
+        return my_work.my_pull_requests;
+      } else {
+        return [];
+      }
+    },
+    my_review_items: function () {
+      if (this.my_works.has(this.project)) {
+        const my_work = this.my_works.get(this.project);
+        return my_work.my_review_items;
+      } else {
+        return [];
+      }
+    }
   },
   methods: {
     listItems: function () {
@@ -182,7 +216,13 @@ export default {
     },
 
     findMyWorks: async function () {
-      return await browser.runtime.sendMessage({type: "findMyWorks"});
+      let all_works = await browser.runtime.sendMessage({ type: "findMyWorks" });
+      return new Map(all_works);
+    },
+
+    projectSlideContent: function (proj) {
+      const { my_pull_requests, my_review_items } = this.my_works.get(proj);
+      return `${proj} (${my_pull_requests.length}|${my_review_items.length})`;
     },
 
     refreshStatus: function () {
@@ -191,8 +231,10 @@ export default {
         try {
           vm.setUpdating(true);
           const my_works = await vm.findMyWorks();
-          vm.my_pull_requests = my_works.my_pull_requests;
-          vm.my_review_items = my_works.my_review_items;
+          vm.my_works = my_works;
+          if (!my_works.has(vm.project)) {
+            vm.project = vm.projects[0];
+          }
         } catch (e) {
           vm.setUpdating(false);
           vm.dialog = true;
@@ -208,6 +250,10 @@ export default {
         await browser.runtime.openOptionsPage();
         window.close();
       })();
+    },
+
+    selectProject: function (proj) {
+      this.project = proj;
     },
   },
   created: function () {
