@@ -15,22 +15,33 @@
         </v-btn>
       </v-card-title>
 
-      <v-slide-group show-arrows center-active v-if="projects.length > 1">
+      <v-slide-group show-arrows center-active v-if="projects.length &gt; 1">
         <v-slide-item v-for="proj in projects" :key="`project-${proj}`">
           <v-btn
-              class="mx-2"
-              :class="{primary: proj == project }"
-              depressed
-              @click.stop="selectProject(proj)"
-            >
-              {{ projectSlideContent(proj) }}
-            </v-btn>
+            class="mx-2 text-none"
+            :class="{ primary: proj == project }"
+            depressed
+            @click.stop="selectProject(proj)"
+          >
+            <span class="d-inline-block text-truncate" style="max-width: 8em" :title="proj">
+              {{ proj }}
+            </span>
+            <span>{{ projectReviewCountContent(proj) }}</span>
+          </v-btn>
         </v-slide-item>
       </v-slide-group>
 
       <v-list two-line>
-        <review-item-list review-title="My Pull Requests" :review-items="my_pull_requests" v-if="hasMyPullRequests()" />
-        <review-item-list review-title="My Review Items" :review-items="my_review_items" v-if="hasMyReviewItems()" />
+        <review-item-list
+          review-title="My Pull Requests"
+          :review-items="my_pull_requests"
+          v-if="hasMyPullRequests()"
+        />
+        <review-item-list
+          review-title="My Review Items"
+          :review-items="my_review_items"
+          v-if="hasMyReviewItems()"
+        />
       </v-list>
 
       <v-overlay :value="updating">
@@ -43,8 +54,8 @@
 </template>
 
 <script>
-import ReviewItemList from "./review-item-list.vue"
-import AccessErrorDialog from "./access-error-dialog.vue"
+import ReviewItemList from "./review-item-list.vue";
+import AccessErrorDialog from "./access-error-dialog.vue";
 
 export default {
   data: function () {
@@ -74,7 +85,7 @@ export default {
       } else {
         return [];
       }
-    }
+    },
   },
   methods: {
     setUpdating: function (enable) {
@@ -90,13 +101,15 @@ export default {
     },
 
     findMyWorks: async function () {
-      let all_works = await browser.runtime.sendMessage({ type: "findMyWorks" });
+      let all_works = await browser.runtime.sendMessage({
+        type: "findMyWorks",
+      });
       return new Map(all_works);
     },
 
-    projectSlideContent: function (proj) {
+    projectReviewCountContent: function (proj) {
       const { my_pull_requests, my_review_items } = this.my_works.get(proj);
-      return `${proj} (${my_pull_requests.length}|${my_review_items.length})`;
+      return `(${my_pull_requests.length}|${my_review_items.length})`;
     },
 
     refreshStatus: function () {
