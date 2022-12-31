@@ -81,7 +81,7 @@ export default {
           project: vm.project,
           user_id: vm.user_id,
         };
-        await browser.storage.local.set({ user_info: user_info });
+        await chrome.storage.local.set({ user_info: user_info });
         try {
           const projects = vm.project.split(",").map(x => x.trim());
           const azure_devops_list = projects.map(p => new AzureDevOps(vm.organization, p, vm.user_id));
