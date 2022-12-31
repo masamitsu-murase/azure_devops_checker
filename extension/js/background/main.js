@@ -3,7 +3,7 @@
 
     var set_badge_text = function (my_pr_count, my_rv_count) {
         if (my_pr_count == 0 && my_rv_count == 0) {
-            browser.browserAction.setBadgeText({ text: "" });
+            chrome.action.setBadgeText({ text: "" });
             return;
         }
 
@@ -15,12 +15,12 @@
         if (my_rv_count >= 10) {
             rv_text = "+";
         }
-        browser.browserAction.setBadgeText({ text: `${pr_text}|${rv_text}` });
+        chrome.action.setBadgeText({ text: `${pr_text}|${rv_text}` });
     };
 
     var set_badge_error = function () {
         const text = "!";
-        browser.browserAction.setBadgeText({ text: text });
+        chrome.action.setBadgeText({ text: text });
     };
 
     var find_my_works = async function () {
@@ -67,29 +67,30 @@
     };
 
     var initialize = function () {
-        browser.runtime.onInstalled.addListener(() => {
-            browser.alarms.create("periodic", { periodInMinutes: 1 });
+        chrome.runtime.onInstalled.addListener(() => {
+            chrome.alarms.create("periodic", { periodInMinutes: 1 });
         });
 
-        if (browser.browserAction.setBadgeTextColor) {
-            browser.browserAction.setBadgeTextColor({ color: "rgb(255,255,255)" });
+        if (chrome.action.setBadgeTextColor) {
+            chrome.action.setBadgeTextColor({ color: "rgb(255,255,255)" });
         }
-        browser.browserAction.setBadgeBackgroundColor({ color: "rgb(196,0,0)" });
+        chrome.action.setBadgeBackgroundColor({ color: "rgb(196,0,0)" });
 
-        browser.runtime.onMessage.addListener((message, sender) => {
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             switch (message.type) {
                 case "findMyWorks":
-                    return find_my_works_in_single_request().then(works => {
+                    find_my_works_in_single_request().then(works => {
                         update_badge_text(works);
-                        return Array.from(works.entries());
+                        sendResponse(Array.from(works.entries()));
                     });
+                    return true;
                 default:
                     console.error(`Unknown type ${message.type}`);
                     break;
             }
         });
 
-        browser.alarms.onAlarm.addListener(alarm => {
+        chrome.alarms.onAlarm.addListener(alarm => {
             switch (alarm.name) {
                 case "periodic":
                     refresh_data();

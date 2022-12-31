@@ -1,5 +1,7 @@
+var AzureDevOps;
+var AzureDevOpsProject;
 
-(function (context) {
+(function () {
     "use strict";
 
     const API_VERSION = "6.0";
@@ -21,7 +23,7 @@
         return await response.json();
     }
 
-    class AzureDevOpsProject {
+    AzureDevOpsProject = class AzureDevOpsProject {
         constructor(organization, project) {
             this.organization = organization;
             this.project = project;
@@ -80,10 +82,10 @@
 
     }
 
-    class AzureDevOps {
+    AzureDevOps = class AzureDevOps {
         static async currentUserInfo() {
             try {
-                const user_info = await browser.storage.local.get("user_info");
+                const user_info = await chrome.storage.local.get("user_info");
                 if (!user_info || !user_info.user_info) {
                     throw "usef_info not found in local storage."
                 }
@@ -269,7 +271,4 @@
         "-10": "REJECTED",
     };
     AzureDevOps.CLOSED_VOTE_STATUS = [10, 5, -10];
-
-    window.AzureDevOps = AzureDevOps;
-    window.AzureDevOpsProject = AzureDevOpsProject;
-})(window);
+})();
