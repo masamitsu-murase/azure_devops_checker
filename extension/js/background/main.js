@@ -74,7 +74,7 @@
         if (browser.browserAction.setBadgeTextColor) {
             browser.browserAction.setBadgeTextColor({ color: "rgb(255,255,255)" });
         }
-        browser.browserAction.setBadgeBackgroundColor({ color: "rgb(255,0,0)" });
+        browser.browserAction.setBadgeBackgroundColor({ color: "rgb(196,0,0)" });
 
         browser.runtime.onMessage.addListener((message, sender) => {
             switch (message.type) {
