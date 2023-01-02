@@ -85,7 +85,7 @@ var AzureDevOpsProject;
     AzureDevOps = class AzureDevOps {
         static async currentUserInfo() {
             try {
-                const user_info = await chrome.storage.local.get("user_info");
+                const user_info = await browser.storage.local.get("user_info");
                 if (!user_info || !user_info.user_info) {
                     throw "usef_info not found in local storage."
                 }
