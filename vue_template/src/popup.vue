@@ -101,9 +101,13 @@ export default {
     },
 
     findMyWorks: async function () {
-      let all_works = await chrome.runtime.sendMessage({
+      const response = await browser.runtime.sendMessage({
         type: "findMyWorks",
       });
+      if (! response.result) {
+        throw new Error(response.error);
+      }
+      const all_works = response.value;
       return new Map(all_works);
     },
 
@@ -134,7 +138,7 @@ export default {
 
     openOptions: function () {
       (async function () {
-        await chrome.runtime.openOptionsPage();
+        await browser.runtime.openOptionsPage();
         window.close();
       })();
     },
